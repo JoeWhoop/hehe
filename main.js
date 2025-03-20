@@ -1,53 +1,91 @@
-document.getElementById("station").addEventListener("change", function(event) {
-    const selectedStation = event.target.value;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repair Station Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title">Select Your Repair Station</h1>
 
-    // Hide QR Scanner and Repair Type Selection initially
-    document.getElementById("qr-scanner").style.display = "none";
-    document.getElementById("repair-type").style.display = "none";
+        <form id="repair-form" action="#" method="POST">
+            <!-- Station Selection -->
+            <div class="form-group">
+                <label for="station">Select the Repair Station:</label>
+                <select id="station" name="station" required>
+                    <option value="">Select a station</option>
+                    <option value="QC 1">QC 1</option>
+                    <option value="NAPRAWA">NAPRAWA</option>
+                    <option value="QC 2">QC 2</option>
+                </select>
+            </div>
 
-    if (selectedStation === "QC 1") {
-        // Show the QR scanner and repair type selection
-        document.getElementById("qr-scanner").style.display = "block";
-        startQRCodeScanner();
-    } else {
-        // If not QC 1, hide everything related to QR and repair type
-        document.getElementById("qr-code").textContent = '';
-    }
-});
+            <!-- QR Code Scanner (Initially hidden) -->
+            <div class="form-group" id="qr-scanner" style="display: none;">
+                <label for="qr-code">Scan the QR Code:</label>
+                <div id="reader" style="width: 100%; height: 200px;"></div>
+                <p id="qr-code"></p> <!-- Display the QR Code content here -->
+            </div>
 
-// Start the QR Code Scanner when QC 1 is selected
-let qrCodeScanner;
-function startQRCodeScanner() {
-    const reader = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+            <!-- Repair Type Selection (Initially hidden) -->
+            <div class="form-group" id="repair-type" style="display: none;">
+                <label>Jaka naprawa?</label>
+                <select id="repair" name="repair" required>
+                    <option value="">Select Repair Type</option>
+                    <option value="ciezka">Ciezka</option>
+                    <option value="lekka">Lekka</option>
+                    <option value="dobra">Dobra</option>
+                </select>
+            </div>
 
-    reader.render(onScanSuccess, onScanError);
-}
+            <!-- User's Name -->
+            <div class="form-group">
+                <label for="question1">What is your name?</label>
+                <input type="text" id="question1" name="question1" required>
+            </div>
 
-// Handle QR code scanning success
-function onScanSuccess(decodedText, decodedResult) {
-    // Show the scanned QR code in the text
-    document.getElementById("qr-code").textContent = `Scanned QR Code: ${decodedText}`;
-    // Stop QR code scanning after success
-    qrCodeScanner.stop().then(() => {
-        // Show the repair type options after QR scan
-        document.getElementById("repair-type").style.display = "block";
-    }).catch((err) => {
-        console.log("Error stopping the QR scanner: ", err);
-    });
-}
+            <!-- User's Age -->
+            <div class="form-group">
+                <label for="question2">What is your age?</label>
+                <input type="number" id="question2" name="question2" required>
+            </div>
 
-// Handle QR code scanning error
-function onScanError(errorMessage) {
-    // In case of error, you can show the error message or retry logic.
-    console.error(`QR Code scanning error: ${errorMessage}`);
-}
+            <!-- Question 3 -->
+            <div class="form-group">
+                <label for="question3">What is your gender?</label>
+                <select id="question3" name="question3" required>
+                    <option value="">Select an option</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
 
-// Optional: Form submit handler to capture all data
-document.querySelector("#repair-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    
-    const qrCode = document.getElementById("qr-code").textContent; // QR code content
-    const repairType = document.getElementById("repair").value; // Repair type selection
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
 
-    alert(`Form submitted! QR Code: ${qrCode}, Repair Type: ${repairType}`);
-});
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const stationSelect = document.getElementById('station');
+            const repairTypeDiv = document.getElementById('repair-type');
+
+            // Listen for changes in the station selection
+            stationSelect.addEventListener('change', function () {
+                const selectedStation = stationSelect.value;
+
+                // Show or hide the repair type dropdown based on the selected station
+                if (selectedStation === 'QC 1') {
+                    repairTypeDiv.style.display = 'block';  // Show the repair type dropdown
+                } else {
+                    repairTypeDiv.style.display = 'none';   // Hide the repair type dropdown
+                }
+            });
+        });
+    </script>
+</body>
+</html>
