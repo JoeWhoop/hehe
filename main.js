@@ -46,22 +46,20 @@ document.addEventListener('DOMContentLoaded', function () {
         // Show or hide the repair type dropdown based on the selected station
         if (selectedStation === 'QC 1') {
             repairTypeDiv.style.display = 'block';  // Show the repair type dropdown
-            qrScannerDiv.style.display = 'block';  // Show QR scanner
             nameField.closest('.form-group').style.display = 'none'; // Hide Name field
             ageField.closest('.form-group').style.display = 'none';  // Hide Age field
             genderField.closest('.form-group').style.display = 'none';  // Hide Gender field
-
-            // Start QR code scanner when QC1 is selected
-            startQRCodeScanner();
         } else {
             repairTypeDiv.style.display = 'none';  // Hide repair type dropdown
-            qrScannerDiv.style.display = 'none';  // Hide QR scanner
             nameField.closest('.form-group').style.display = 'block'; // Show Name field
             ageField.closest('.form-group').style.display = 'block';  // Show Age field
             genderField.closest('.form-group').style.display = 'block';  // Show Gender field
-
-            // Stop QR code scanner when QC1 is not selected
-            stopQRCodeScanner();
         }
+
+        // Start QR code scanner for all stations
+        startQRCodeScanner();
     });
+
+    // Start the QR scanner when the page loads (optional)
+    startQRCodeScanner();
 });
