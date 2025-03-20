@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const stationSelect = document.getElementById('station');
     const repairTypeDiv = document.getElementById('repair-type');
     const qrScannerDiv = document.getElementById('qr-scanner');
-    const formFields = document.querySelectorAll('.form-group'); // Get all form groups
     const nameField = document.getElementById('question1');
     const ageField = document.getElementById('question2');
     const genderField = document.getElementById('question3');
@@ -12,9 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize the QR code scanner function
     function startQRCodeScanner() {
+        // Initialize the Html5Qrcode instance
         qrCodeScanner = new Html5Qrcode("reader");
+
+        // Start the QR scanner with camera access
         qrCodeScanner.start(
-            { facingMode: "environment" }, // Facing mode: environment for the back camera
+            { facingMode: "environment" }, // Use the environment camera (back camera on most devices)
             {
                 fps: 10,  // Frames per second (scan rate)
                 qrbox: { width: 250, height: 250 }, // Size of the scanning box
@@ -23,12 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('qr-code').innerText = `QR Code Detected: ${decodedText}`;
             },
             (errorMessage) => {
-                // You can handle errors here if needed
+                // Handle errors, if any (can be logged or displayed)
             }
-        );
+        ).catch((err) => {
+            console.error("Error starting the QR scanner: ", err);
+        });
     }
 
-    // Stop the QR scanner
+    // Stop the QR scanner (this should be triggered when no longer needed)
     function stopQRCodeScanner() {
         if (qrCodeScanner) {
             qrCodeScanner.stop().then(() => {
@@ -56,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
             genderField.closest('.form-group').style.display = 'block';  // Show Gender field
         }
 
-        // Start QR code scanner for all stations
+        // Start QR Code scanning when station is selected (for all stations)
         startQRCodeScanner();
     });
 
-    // Start the QR scanner when the page loads (optional)
+    // Start the QR scanner when the page loads
     startQRCodeScanner();
 });
