@@ -7,6 +7,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const ageField = document.getElementById('question2');
     const genderField = document.getElementById('question3');
 
+    const qrCodeElement = document.getElementById('reader'); // QR scanner element
+    let qrCodeScanner; // To store the QR scanner instance
+
+    // Initialize the QR code scanner function
+    function startQRCodeScanner() {
+        qrCodeScanner = new Html5Qrcode("reader");
+        qrCodeScanner.start(
+            { facingMode: "environment" }, // Facing mode: environment for the back camera
+            {
+                fps: 10,  // Frames per second (scan rate)
+                qrbox: { width: 250, height: 250 }, // Size of the scanning box
+            },
+            (decodedText, decodedResult) => {
+                document.getElementById('qr-code').innerText = `QR Code Detected: ${decodedText}`;
+            },
+            (errorMessage) => {
+                // You can handle errors here if needed
+            }
+        );
+    }
+
+    // Stop the QR scanner
+    function stopQRCodeScanner() {
+        if (qrCodeScanner) {
+            qrCodeScanner.stop().then(() => {
+                console.log("QR Scanner stopped.");
+            }).catch((err) => {
+                console.error("Error stopping QR scanner", err);
+            });
+        }
+    }
+
     // Listen for changes in the station selection
     stationSelect.addEventListener('change', function () {
         const selectedStation = stationSelect.value;
@@ -18,12 +50,18 @@ document.addEventListener('DOMContentLoaded', function () {
             nameField.closest('.form-group').style.display = 'none'; // Hide Name field
             ageField.closest('.form-group').style.display = 'none';  // Hide Age field
             genderField.closest('.form-group').style.display = 'none';  // Hide Gender field
+
+            // Start QR code scanner when QC1 is selected
+            startQRCodeScanner();
         } else {
             repairTypeDiv.style.display = 'none';  // Hide repair type dropdown
             qrScannerDiv.style.display = 'none';  // Hide QR scanner
             nameField.closest('.form-group').style.display = 'block'; // Show Name field
             ageField.closest('.form-group').style.display = 'block';  // Show Age field
             genderField.closest('.form-group').style.display = 'block';  // Show Gender field
+
+            // Stop QR code scanner when QC1 is not selected
+            stopQRCodeScanner();
         }
     });
 });
